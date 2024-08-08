@@ -7,7 +7,7 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobil
 from tensorflow.keras.applications.densenet import preprocess_input as densenet_preprocess_input
 
 # Load the trained models
-mobilenet_model_path = 'best_model_mobilenetv2.keras'
+mobilenet_model_path = 'best_model_net.keras'
 densenet_model_path = 'best_model_densenet121.keras'
 
 try:
