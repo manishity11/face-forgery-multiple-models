@@ -7,7 +7,7 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobil
 from tensorflow.keras.applications.densenet import preprocess_input as densenet_preprocess_input
 
 # Load the trained models
-mobilenet_model_path = 'best_model_net.keras'
+mobilenet_model_path = 'best_model_mobilenetv2.keras'
 densenet_model_path = 'best_model_densenet121.keras'
 
 try:
@@ -37,8 +37,12 @@ st.title("Deepfake Detection with MobileNetV2 and DenseNet121")
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 
 if uploaded_file is not None:
+    # Ensure the temporary directory exists
+    temp_dir = "temp"
+    os.makedirs(temp_dir, exist_ok=True)
+
     # Save the uploaded file temporarily
-    temp_file_path = os.path.join("temp", uploaded_file.name)
+    temp_file_path = os.path.join(temp_dir, uploaded_file.name)
     with open(temp_file_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
 
