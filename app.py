@@ -31,6 +31,17 @@ def preprocess_and_predict(image_path, model, preprocess_input, target_size):
     predictions = model.predict(img_array)
     return predictions
 
+# Function to interpret predictions
+def interpret_predictions(predictions):
+    real_prob, fake_prob = predictions[0]
+    if real_prob > fake_prob:
+        label = "Real"
+        confidence = real_prob
+    else:
+        label = "Fake"
+        confidence = fake_prob
+    return label, confidence
+
 # Streamlit app
 st.title("Deepfake Detection with MobileNetV2 and DenseNet121")
 
@@ -52,10 +63,12 @@ if uploaded_file is not None:
     if mobilenet_model:
         st.subheader("MobileNetV2 Prediction")
         mobilenet_predictions = preprocess_and_predict(temp_file_path, mobilenet_model, mobilenet_preprocess_input, (224, 224))
-        st.write(f"Predictions: {mobilenet_predictions}")
+        mobilenet_label, mobilenet_confidence = interpret_predictions(mobilenet_predictions)
+        st.write(f"Prediction: {mobilenet_label} (Confidence: {mobilenet_confidence:.2f})")
 
     # Predict using DenseNet121
     if densenet_model:
         st.subheader("DenseNet121 Prediction")
         densenet_predictions = preprocess_and_predict(temp_file_path, densenet_model, densenet_preprocess_input, (224, 224))
-        st.write(f"Predictions: {densenet_predictions}")
+        densenet_label, densenet_confidence = interpret_predictions(densenet_predictions)
+        st.write(f"Prediction: {densenet_label} (Confidence: {densenet_confidence:.2f})")
