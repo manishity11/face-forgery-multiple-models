@@ -8,9 +8,9 @@ from tensorflow.keras.applications.convnext import ConvNeXtBase, preprocess_inpu
 from tensorflow.keras.applications.densenet import DenseNet121, preprocess_input as densenet_preprocess_input
 
 # Load the trained models
-mobilenet_model_path = 'path/to/your/trained_mobilenetv2_model.h5'
-convnext_model_path = 'path/to/your/trained_convnext_model.h5'
-densenet_model_path = 'path/to/your/trained_densenet121_model.h5'
+mobilenet_model_path = 'best_model_net.keras'
+convnext_model_path = 'best_model_vit.keras'
+densenet_model_path = 'best_model_densenet121.keras'
 
 mobilenet_model = tf.keras.models.load_model(mobilenet_model_path)
 convnext_model = tf.keras.models.load_model(convnext_model_path)
