@@ -7,12 +7,20 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobil
 from tensorflow.keras.applications.densenet import preprocess_input as densenet_preprocess_input
 
 # Load the trained models
-mobilenet_model_path = 'best_model_net.keras'
+mobilenet_model_path = 'best_model_mobilenetv2.keras'
 densenet_model_path = 'best_model_densenet121.keras'
 
-# Custom objects if needed (not likely necessary for MobileNetV2 or DenseNet121)
-mobilenet_model = tf.keras.models.load_model(mobilenet_model_path)
-densenet_model = tf.keras.models.load_model(densenet_model_path)
+try:
+    mobilenet_model = tf.keras.models.load_model(mobilenet_model_path)
+    st.success("MobileNetV2 model loaded successfully.")
+except Exception as e:
+    st.error(f"Error loading MobileNetV2 model: {e}")
+
+try:
+    densenet_model = tf.keras.models.load_model(densenet_model_path)
+    st.success("DenseNet121 model loaded successfully.")
+except Exception as e:
+    st.error(f"Error loading DenseNet121 model: {e}")
 
 # Function to preprocess and predict using a specified model
 def preprocess_and_predict(image_path, model, preprocess_input, target_size):
@@ -30,17 +38,20 @@ uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 
 if uploaded_file is not None:
     # Save the uploaded file temporarily
-    with open(os.path.join("temp", uploaded_file.name), "wb") as f:
+    temp_file_path = os.path.join("temp", uploaded_file.name)
+    with open(temp_file_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
-    
+
     st.image(uploaded_file, caption='Uploaded Image', use_column_width=True)
-    
+
     # Predict using MobileNetV2
-    st.subheader("MobileNetV2 Prediction")
-    mobilenet_predictions = preprocess_and_predict(os.path.join("temp", uploaded_file.name), mobilenet_model, mobilenet_preprocess_input, (224, 224))
-    st.write(f"Predictions: {mobilenet_predictions}")
+    if mobilenet_model:
+        st.subheader("MobileNetV2 Prediction")
+        mobilenet_predictions = preprocess_and_predict(temp_file_path, mobilenet_model, mobilenet_preprocess_input, (224, 224))
+        st.write(f"Predictions: {mobilenet_predictions}")
 
     # Predict using DenseNet121
-    st.subheader("DenseNet121 Prediction")
-    densenet_predictions = preprocess_and_predict(os.path.join("temp", uploaded_file.name), densenet_model, densenet_preprocess_input, (224, 224))
-    st.write(f"Predictions: {densenet_predictions}")
+    if densenet_model:
+        st.subheader("DenseNet121 Prediction")
+        densenet_predictions = preprocess_and_predict(temp_file_path, densenet_model, densenet_preprocess_input, (224, 224))
+        st.write(f"Predictions: {densenet_predictions}")
